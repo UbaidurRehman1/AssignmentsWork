@@ -10,6 +10,7 @@ public abstract class Operation
 	{
 		this.operand = operand;
 		this.operator = operator;
+		doMath();
 	}
 	
 	public abstract double doMath();
