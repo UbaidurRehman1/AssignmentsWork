@@ -11,7 +11,8 @@ public class Main
 {
 
 	
-	Scanner input = null;
+	Scanner input = new Scanner(System.in);
+
 	MQueue<String> inputs = new MQueue<>();
 	String option = null;
 
@@ -19,29 +20,31 @@ public class Main
 	
 	public static void main(String[] args)
 	{
+		Main main = new Main();
+		System.out.println("Enter tokens. Legal tokens are integers, +, -, *, /, U[ndo], R[edo], E[valuate] and [e]X[it]");
+		main.getInputs();
 	}
 
-	public void getInputs()
+	private void getInputs()
 	{
 		do
 		{
 			option = input.nextLine();
 			inputs.enqueue(option);
 			
-		}while(!option.equals("E") || !option.equals("X"));
+		}while(!option.equals("E") && !option.equals("X"));
 
+		start();
 	}
 	
-	public void start()
+	private void start()
 	{
-		input = new Scanner(System.in);
 		Operation operation;
 		MQueue<Operation> queue = new MQueue<>();
 		MStack<Operation> undo = new MStack<>();
 		MStack<Operation> redo = new MStack<>();
 		
 		
-		System.out.println("Enter tokens. Legal tokens are integers, +, -, *, /, U[ndo], R[edo], E[valuate] and [e]X[it]");
 		String line = null;
 		
 		
@@ -68,6 +71,8 @@ public class Main
 							getInputs();
 							break;
 						case "U":
+							if(undo.isEmpty())
+								throw new IllegalArgumentException("ERROR --> Undo is empty - Can't Undo ");								
 							Operation undoOperation = (Operation) undo.pop().clone();
 							undoOperation.undo();
 							queue.enqueue(undoOperation);
@@ -75,7 +80,7 @@ public class Main
 							break;
 						case "R":
 							if(redo.isEmpty())
-								throw new IllegalArgumentException("Redo stack is empty");
+								throw new IllegalArgumentException("ERROR --> Redo is empty - Can't Redo ");
 							Operation op = (Operation) redo.pop().clone();	
 							op.redo();
 							queue.enqueue(op);
@@ -92,7 +97,7 @@ public class Main
 							break;
 
 						default:
-							throw new IllegalArgumentException("Incorrent Token, Skiping Line");
+							throw new IllegalArgumentException("ERROR --> Invalid Token - line ignored");
 					}
 				}
 				else if(arr.length == 2)
@@ -119,7 +124,7 @@ public class Main
 								operation = new Division(operand);
 								break;
 							default:
-								throw new IllegalArgumentException("Incorrect Toake, Skipping LIne");
+								throw new IllegalArgumentException("ERROR --> Invalid Token - line ignored");
 					
 						}
 						
@@ -128,7 +133,7 @@ public class Main
 					}
 					else
 					{
-						throw new IllegalArgumentException("Incorrent Token, Skipping Line");
+						throw new IllegalArgumentException("ERROR --> Invalid Token - line ignored");
 						
 					}
 				}
@@ -136,15 +141,15 @@ public class Main
 			}
 			catch(NumberFormatException exp)
 			{
-				System.out.println(exp.getMessage());
+				queue.enqueue(new CalclException(exp.getMessage()));
 			}
 			catch(IllegalArgumentException exp)
 			{
-				System.out.println(exp.getMessage());
+				queue.enqueue(new CalclException(exp.getMessage()));
 			}
 			catch(Exception exp)
 			{
-				System.out.println(exp.getMessage());				
+				queue.enqueue(new CalclException(exp.getMessage()));
 			}
 			
 			

@@ -6,8 +6,10 @@ public abstract class Operation implements Cloneable
 	private static double total;
 	protected double _total;
 	final protected char operator; 
-	private boolean isNormalOperation = false;
+	private boolean isNormalOperation = true;
 	private char undo_rodo;
+	private boolean isException = false;
+	private String exceptionMessage;
 	
 	public Operation(double operand, char operator)
 	{
@@ -15,6 +17,14 @@ public abstract class Operation implements Cloneable
 		this.operator = operator;
 		_total = doMath();
 		setNormalOperation(true);
+	}
+
+	public Operation(String message)
+	{
+		operand = -1;
+		operator = 'E';
+		setException(true);
+		setExceptionMessage(message);
 	}
 	
 	public abstract double doMath();
@@ -44,10 +54,12 @@ public abstract class Operation implements Cloneable
 	public String toString()
 	{
 		String str = null;
-		if(isNormalOperation)
+		if(isNormalOperation && !isException)
 			str = String.format("\n%c %.2f\nTotal = %.1f", operator, operand, _total);
-		else
+		else if(!isNormalOperation)
 			str = String.format("\n%c\nTotal = %.1f", undo_rodo, _total);
+		else
+			str = String.format("\n%s", getExceptionMessage());
 		return str;
 	}
 
@@ -62,6 +74,22 @@ public abstract class Operation implements Cloneable
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		return super.clone();
+	}
+
+	public boolean isException() {
+		return isException;
+	}
+
+	public void setException(boolean isException) {
+		this.isException = isException;
+	}
+
+	public String getExceptionMessage() {
+		return exceptionMessage;
+	}
+
+	public void setExceptionMessage(String exceptionMessage) {
+		this.exceptionMessage = exceptionMessage;
 	}
 	
 	
