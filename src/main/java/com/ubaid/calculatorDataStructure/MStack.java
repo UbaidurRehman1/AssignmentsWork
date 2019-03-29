@@ -5,6 +5,7 @@ import java.util.LinkedList;
 public class MStack<E>
 { 
     private LinkedList<E> s = new LinkedList<>();
+   
     
     
     public void push(E e)

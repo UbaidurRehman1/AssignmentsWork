@@ -11,8 +11,18 @@ public class Subtract extends Operation
 	@Override
 	public double doMath()
 	{
-		return getTotal() - operand;
+		setTotal(getTotal() - operand);
+		_total = getTotal();
+		return getTotal();
 	}
+	
+	@Override
+	public void undo() {
+		super.undo();
+		setTotal(getTotal() + operand);
+		_total = getTotal();
+	}
+
 	
 	
 

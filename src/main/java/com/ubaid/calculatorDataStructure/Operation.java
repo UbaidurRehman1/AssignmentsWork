@@ -1,16 +1,20 @@
 package com.ubaid.calculatorDataStructure;
 
-public abstract class Operation
+public abstract class Operation implements Cloneable
 {
 	final double operand;
-	private double total = 0;
+	private static double total;
+	protected double _total;
 	final protected char operator; 
+	private boolean isNormalOperation = false;
+	private char undo_rodo;
 	
 	public Operation(double operand, char operator)
 	{
 		this.operand = operand;
 		this.operator = operator;
-		doMath();
+		_total = doMath();
+		setNormalOperation(true);
 	}
 	
 	public abstract double doMath();
@@ -20,14 +24,44 @@ public abstract class Operation
 	}
 
 	public void setTotal(double total) {
-		this.total = total;
+		Operation.total = total;
 	}
 
+	public void redo()
+	{
+		undo_rodo = 'R';
+		setNormalOperation(false);
+		doMath();
+	}
+	
+	public void undo()
+	{
+		undo_rodo = 'U';
+		setNormalOperation(false);
+	}
+	
 	@Override
 	public String toString()
 	{
-		String str = String.format("%c %f\nTotal = %.1f", operator, operand, total);
+		String str = null;
+		if(isNormalOperation)
+			str = String.format("\n%c %.2f\nTotal = %.1f", operator, operand, _total);
+		else
+			str = String.format("\n%c\nTotal = %.1f", undo_rodo, _total);
 		return str;
+	}
+
+	public boolean isNormalOperation() {
+		return isNormalOperation;
+	}
+
+	public void setNormalOperation(boolean isNormalOperation) {
+		this.isNormalOperation = isNormalOperation;
+	}
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 	
 	

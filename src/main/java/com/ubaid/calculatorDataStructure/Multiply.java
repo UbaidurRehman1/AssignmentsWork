@@ -11,7 +11,24 @@ public class Multiply extends Operation
 	@Override
 	public double doMath()
 	{
-		return getTotal() * operand;
+		setTotal(getTotal() * operand);
+		_total = getTotal();
+		return getTotal();
 	}
+	
+	@Override
+	public void undo() {
+		super.undo();
+		try
+		{
+			setTotal(getTotal() / operand);			
+		}
+		catch(Exception exp)
+		{
+			
+		}
+		_total = getTotal();
+	}
+
 
 }
