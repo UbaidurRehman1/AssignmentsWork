@@ -1,11 +1,6 @@
 package com.ubaid.calculatorDataStructure;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Scanner;
-
-import javax.print.attribute.Size2DSyntax;
 
 public class Main
 {
